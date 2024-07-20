@@ -1,0 +1,72 @@
+/*Intuition
+The intuition behind implementing a stack using two queues is to simulate the Last In First Out (LIFO) behavior of a stack by leveraging the First In First Out (FIFO) nature of queues. By carefully managing the elements between two queues, we can ensure that the stack operations (push, pop, top, empty) behave as expected.
+
+Approach
+Data Structures:
+Use two queues, q1 and q2, to manage the elements.
+q1 will always contain the current state of the stack.
+q2 will be used temporarily during the push operation.
+
+Push Operation:
+Add the new element to q2.
+Transfer all elements from q1 to q2, which ensures that the new element is at the front of q1 after the queues are swapped.
+Swap q1 and q2.
+
+Pop Operation:
+Remove and return the front element from q1, which is the top element of the stack.
+
+Top Operation:
+Return the front element from q1 without removing it, representing the top element of the stack.
+
+Empty Operation:
+Check if q1 is empty to determine if the stack is empty.
+
+Complexity
+Time complexity:
+push: O(n), where n is the number of elements in the queue. This is because all elements need to be transferred from q1 to q2.
+pop: O(1), as it simply removes the front element of q1.
+top: O(1), as it simply returns the front element of q1.
+empty: O(1), as it checks if q1 is empty.
+
+Space complexity:
+O(N) where N is the number of elements in the stack. Both q1 and q2 together will hold at most n elements.*/
+
+import java.util.Queue;
+import java.util.LinkedList;
+class MyStack {
+    Queue<Integer>q1;
+    Queue<Integer>q2;
+
+    public MyStack() {
+        q1 = new LinkedList<>();
+        q2 = new LinkedList<>();
+    }
+    
+    public void push(int x) {
+        q2.add(x);
+        while(!q1.isEmpty()){
+            q2.add(q1.remove());
+        }
+        Queue<Integer>temp = q1;
+        q1 = q2;
+        q2 = temp;
+    }
+    
+    public int pop() {
+        if(!q1.isEmpty()){
+            return q1.remove();
+        }
+        return -1;
+    }
+    
+    public int top() {
+        if(!q1.isEmpty()){
+            return q1.peek();
+        }
+        return -1;
+    }
+    
+    public boolean empty() {
+        return q1.isEmpty();
+    }
+}
