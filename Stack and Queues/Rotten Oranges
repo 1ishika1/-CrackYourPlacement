@@ -1,0 +1,88 @@
+Intuition
+The problem of "Rotting Oranges" can be approached using a Breadth-First Search (BFS) algorithm, which is well-suited for problems involving spreading or propagation over a grid. The intuition behind using BFS is to simulate the spread of rot from rotten oranges to fresh ones over time, similar to how we might model the spread of a virus or fire.
+
+Approach
+Initial Setup:
+
+Identify all the rotten oranges in the grid. These oranges will act as multiple starting points for the BFS.
+Count the total number of fresh oranges. This count will help determine if it's possible to rot all oranges.
+
+Queue for BFS:
+Use a queue to manage the BFS process. Each element in the queue will represent a rotten orange along with the time at which it became rotten.
+Initialize the queue with all the initially rotten oranges and set their starting time to zero.
+Direction Vectors:
+
+Use direction vectors to easily access the neighboring cells (up, down, left, right) from any given cell. This helps in checking all possible adjacent cells for fresh oranges that can be rotted.
+
+BFS Process:
+Process each rotten orange from the queue one by one.
+For each rotten orange, attempt to infect its neighboring fresh oranges. If a fresh orange is infected, it is added to the queue with an incremented time value, indicating the minute it got infected.
+Keep track of the maximum time value encountered during this process, which will represent the total time taken to rot all reachable fresh oranges.
+Final Check:
+
+After the BFS process, check if there are any fresh oranges left. If there are, it means some oranges could not be rotted, and the function should return -1.
+If all fresh oranges are successfully rotted, return the total time taken.
+
+
+import java.util.*;
+
+class Solution {
+    public static int orangesRotting(int[][] grid) {
+        if (grid == null || grid.length == 0) return 0;
+        
+        int rows = grid.length;
+        int cols = grid[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        int countFresh = 0;
+        boolean[][] visited = new boolean[rows][cols];
+        
+        // Initialize the queue with all initially rotten oranges
+        // and count the number of fresh oranges.
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] == 2) {
+                    queue.offer(new int[]{i, j, 0}); // {row, col, time}
+                    visited[i][j] = true;
+                } else if (grid[i][j] == 1) {
+                    countFresh++;
+                }
+            }
+        }
+        
+        // If there are no fresh oranges, return 0.
+        if (countFresh == 0) return 0;
+        
+        // Initialize directions for moving up, down, left, right.
+        int[] dx = {0, 0, 1, -1};
+        int[] dy = {1, -1, 0, 0};
+        int minutes = 0;
+        
+        // BFS to infect fresh oranges.
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int x = current[0];
+            int y = current[1];
+            int time = current[2];
+            minutes = time; // Update minutes to the current time
+            
+            // Check all 4 directions.
+            for (int j = 0; j < 4; j++) {
+                int newX = x + dx[j];
+                int newY = y + dy[j];
+                
+                // If the new position is within bounds and is a fresh orange.
+                if (newX >= 0 && newY >= 0 && newX < rows && newY < cols && 
+                    grid[newX][newY] == 1 && !visited[newX][newY]) {
+                    // Infect the orange.
+                    grid[newX][newY] = 2;
+                    queue.offer(new int[]{newX, newY, time + 1});
+                    visited[newX][newY] = true;
+                    countFresh--;
+                }
+            }
+        }
+        
+        // If there are still fresh oranges left, return -1.
+        return countFresh == 0 ? minutes : -1;
+    }
+}
