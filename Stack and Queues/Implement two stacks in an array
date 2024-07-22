@@ -1,0 +1,63 @@
+Intuition
+The idea is to start two stacks from two extreme corners of the array. 
+
+Implementation
+Stack1 starts from the leftmost corner of the array, the first element in stack1 is pushed at index 0 of the array. 
+Stack2 starts from the rightmost corner of the array, the first element in stack2 is pushed at index (n-1) of the array. 
+Both stacks grow (or shrink) in opposite directions. 
+To check for overflow, all we need to check is for availability of space between top elements of both stacks.
+To check for underflow, all we need to check is if the value of the top of the both stacks  is between 0 to (n-1) or not.
+
+class twoStacks {
+    int[] arr;
+    int size;
+    int top1, top2;
+
+    twoStacks() {
+        size = 100;
+        arr = new int[100];
+        top1 = -1;
+        top2 = size;
+    }
+
+    // Function to push an integer into stack1.
+    void push1(int x) {
+        // Check for overflow
+        if (top1 < top2 - 1) {
+            arr[++top1] = x;
+        } else {
+            System.out.println("Stack Overflow");
+        }
+    }
+
+    // Function to push an integer into stack2.
+    void push2(int x) {
+        // Check for overflow
+        if (top1 < top2 - 1) {
+            arr[--top2] = x;
+        } else {
+            System.out.println("Stack Overflow");
+        }
+    }
+
+    // Function to remove an element from top of stack1.
+    int pop1() {
+        if (top1 >= 0) {
+            return arr[top1--];
+        } else {
+            
+            return -1;
+        }
+    }
+
+    // Function to remove an element from top of stack2.
+    int pop2() {
+        if (top2 < size) {
+            return arr[top2++];
+        } else {
+            
+            return -1;
+        }
+    }
+   
+}
