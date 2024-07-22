@@ -1,0 +1,56 @@
+Initialization:
+
+A stack is initialized and all people (indices from 0 to n-1) are pushed onto the stack.
+
+Finding the Candidate:
+
+While the stack has more than one person, pop two people and compare:
+If the first person knows the second, the first cannot be a celebrity; push the second person back.
+If the first person does not know the second, the second cannot be a celebrity; push the first person back.
+
+Explaination for (Validating the Candidate:)
+
+After identifying the potential candidate, we need to ensure this candidate meets the two necessary conditions to be a celebrity:
+
+The candidate should not know anyone else:
+
+This means that for the candidate row in the matrix, all values should be 0 (indicating the candidate does not know any other person).
+Everyone should know the candidate:
+
+This means that for the candidate column in the matrix, all values should be 1 (indicating everyone knows the candidate), except the diagonal element where the candidate knows themselves (which is always 0).
+
+POP THE CANDIDATE: After reducing the stack to one person, we pop this last person. This person is our potential celebrity candidate.
+VALIDATE THE CANDIDATE: We iterate through all the people (from 0 to n-1).
+For each person i, we check two conditions:
+The candidate should not know person i: M[candidate][i] == 1 would mean the candidate knows i, which should not happen. Thus, if this condition is true, the candidate is disqualified, and we return -1.
+Person i should know the candidate: M[i][candidate] == 0 would mean i does not know the candidate, which should not happen. Thus, if this condition is true, the candidate is disqualified, and we return -1.
+The condition i != candidate ensures that we are not checking the candidate against themselves.
+RETURN THE CANDIDATE..
+
+class Solution
+{ 
+    //Function to find if there is a celebrity in the party or not.
+    int celebrity(int M[][], int n)
+    {
+        
+    	// code here 
+    	int candidate = 0;
+        // Step 1: Find the potential celebrity
+        for (int i = 1; i < n; i++) {
+            if (M[candidate][i] == 1) {
+                // candidate knows i, so candidate can't be a celebrity, i might be
+                candidate = i;
+            }
+        }
+        
+        // Step 2: Validate the candidate
+        for (int i = 0; i < n; i++) {
+            // If candidate knows i or i doesn't know candidate, then candidate is not a celebrity
+            if (i != candidate && (M[candidate][i] == 1 || M[i][candidate] == 0)) {
+                return -1;
+            }
+        }
+        
+        return candidate;
+    }
+}
