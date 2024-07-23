@@ -1,0 +1,57 @@
+# Intuition & Approach
+The intuition behind this approach is to use a stack to keep track of characters and their frequencies as we traverse through the string. The stack helps manage and remove sequences of k identical characters efficiently. Here’s a step-by-step breakdown of the approach:
+
+Stack Initialization: We use a stack to store pairs of characters and their respective counts.
+
+Traverse the String:
+
+For each character in the string:
+Check Stack: If the stack is not empty and the top character of the stack is the same as the current character, increment the count of that character.
+Check Count: If the count reaches k, pop the element from the stack, effectively removing k consecutive identical characters.
+New Character: If the character is different from the top of the stack or if the stack is empty, push a new pair (character, 1) onto the stack.
+Reconstruct the String: After processing all characters, reconstruct the final string by iterating through the stack and repeating each character according to its count.
+
+
+
+class Solution {
+    public String removeDuplicates(String s, int k) {
+        // A stack to store pairs of character and its frequency
+        Stack<Pair> stack = new Stack<>();
+        
+        // Traverse through each character in the string
+        for (char c : s.toCharArray()) {
+            if (!stack.isEmpty() && stack.peek().character == c) {
+                // Increment the count of the top character
+                stack.peek().count++;
+                // If count reaches k, pop the element from the stack
+                if (stack.peek().count == k) {
+                    stack.pop();
+                }
+            } else {
+                // Push the character with count 1 onto the stack
+                stack.push(new Pair(c, 1));
+            }
+        }
+        
+        // Reconstruct the final string
+        StringBuilder result = new StringBuilder();
+        for (Pair p : stack) {
+            for (int i = 0; i < p.count; i++) {
+                result.append(p.character);
+            }
+        }
+        
+        return result.toString();
+    }
+
+    // Helper class to store a character and its frequency
+    private static class Pair {
+        char character;
+        int count;
+
+        Pair(char character, int count) {
+            this.character = character;
+            this.count = count;
+        }
+    }
+}
